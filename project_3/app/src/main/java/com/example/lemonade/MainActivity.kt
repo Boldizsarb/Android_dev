@@ -74,7 +74,7 @@ fun LemonadeApp( modifier: Modifier = Modifier) {
                             .wrapContentSize()
                             .clickable {
                                 currentStep = 2
-                                squeze = 0 // reset
+                                squeze = (2..4).random() // reset
                             }
                     )
                     }
@@ -93,9 +93,11 @@ fun LemonadeApp( modifier: Modifier = Modifier) {
                         contentDescription = stringResource(R.string.Lemon),
                         modifier = Modifier.wrapContentSize()
                             .clickable {
-                            currentStep = 3
-                                squeze ++
-                                Log.d("LemonadeApp", "Squeezed: $squeze times")
+                            squeze --
+                            if(squeze == 0){
+                                currentStep = 3 // jumping to the other picture
+                            }
+                            Log.d("LemonadeApp", "Squeezed: $squeze times")
 
                         }
                     )
