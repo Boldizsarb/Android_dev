@@ -4,6 +4,7 @@ import android.widget.Switch
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -36,6 +37,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.ImeAction
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,7 +60,12 @@ fun TippApp( modifier: Modifier = Modifier) {
 
     var amountInput by remember { mutableStateOf("") }
     val amount = amountInput.toDoubleOrNull() ?: 0.0
-    val tip = calculateTip(amount)
+    var tipInput by remember { mutableStateOf("") } // stores the tip input
+    val tipPercent = tipInput.toDoubleOrNull() ?: 0.0
+    val tip = calculateTip(amount, tipPercent )
+
+
+
 
     Column(
         modifier = Modifier
@@ -69,22 +76,37 @@ fun TippApp( modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(
+        Text(  // calculate tip text
             text = stringResource(R.string.calculate_tip),
             modifier = Modifier
                 .padding(bottom = 16.dp, top = 40.dp)
                 .align(alignment = Alignment.Start)
         )
-        Text(
+        Text(  // tip ammount
             text = stringResource(R.string.tip_amount, tip),   // tip is calling the function
             style = MaterialTheme.typography.displaySmall
         )
-        EditNumberField(
+        EditNumberField( // bill ammount
+            label = R.string.bill_amount,
+            keyboardOptions = KeyboardOptions.Default.copy( // passing the keyboard option through as well
+                keyboardType = KeyboardType.Number, // the right keyboard // passed as parameter
+                imeAction = ImeAction.Next
+            ),
             value = amountInput,
             onValueChange = { amountInput = it },
             modifier = Modifier
                 .padding(bottom = 32.dp)
                 .fillMaxWidth()
+        )
+        EditNumberField( // tip percentage
+            label = R.string.how_was_the_service,
+            keyboardOptions = KeyboardOptions.Default.copy( // keyboard
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Done //  the action type changes
+            ),
+            value = tipInput,
+            onValueChange = { tipInput = it },
+            modifier = Modifier.padding(bottom = 32.dp).fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(150.dp))
     }
@@ -93,20 +115,20 @@ fun TippApp( modifier: Modifier = Modifier) {
 
 
 @Composable
-fun EditNumberField( value: String,
-                     onValueChange: (String) -> Unit, // callback lambda, triggered onvalue change, so the state updates elsewhere
-                     modifier: Modifier = Modifier) {
+fun EditNumberField(@StringRes label: Int, // allows the label to be specified in the main fucntion
+                    keyboardOptions: KeyboardOptions, // the right keyboard passed as parameter
+                    value: String,
+                    onValueChange: (String) -> Unit, // callback lambda, triggered onvalue change, so the state updates elsewhere, hence the state variables are in the main function
+                    modifier: Modifier = Modifier) {
 
-//    var amountInput by remember { mutableStateOf("") }  // tis been hoisted to TipTimeLayout
-//    val amount = amountInput.toDoubleOrNull() ?: 0.0
-//    val tip = calculateTip(amount)
 
     TextField(
         value = value, // displays the input
         onValueChange = onValueChange, // state change to the input
         singleLine = true, // single line
-        label = { Text(stringResource(R.string.bill_amount)) }, // space holder
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number), // the right keyboard
+        label = { Text(stringResource(label)) }, // space holder
+        keyboardOptions = keyboardOptions, //(keyboardType = KeyboardType.Number, // the right keyboard
+
         modifier = modifier
     )
 }
