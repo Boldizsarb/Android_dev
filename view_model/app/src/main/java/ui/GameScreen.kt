@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.viewmodell.R
 import com.example.viewmodell.ui.theme.ViewModellTheme
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun GameScreen() {
