@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">setup</string>
+    <string name="seat_number">26F</string>
+    <string name="destination">Ciudad de México</string>
+    <string name="main_text">Hola</string>
+</resources>
